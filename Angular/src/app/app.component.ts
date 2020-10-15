@@ -14,14 +14,16 @@ export class AppComponent {
   constructor(private service: Service) {
     this.customers = service.getCustomers();
     this.stateSortOrder = 'asc';
-    this.calculateGroupValue = this.calculateGroupValue.bind(this);
+    this.calculateCellValue = this.calculateCellValue.bind(this);
   }
 
-  calculateGroupValue (rowData) {
-    if (rowData.State === 'California') {
-      return this.stateSortOrder === 'asc' ? 'zzz' : 'aaa';
-    } else {
-      return rowData.State;
-    }
+  calculateGroupValue(this: any, rowData: any) {
+    const sortValue = rowData.State === 'California' ? this.sortOrder !== 'desc' ? 'aaa' : 'zzz' : rowData.State;
+    const displayValue = rowData.State;
+    return sortValue + ';' + displayValue;
+  }
+
+  calculateCellValue(rowData: any) {
+    return rowData.State === 'California' ? this.stateSortOrder !== 'desc' ? 'aaa' : 'zzz' : rowData.State;
   }
 }

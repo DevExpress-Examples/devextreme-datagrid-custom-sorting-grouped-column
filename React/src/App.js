@@ -1,28 +1,27 @@
 import React from 'react';
-import DataGrid, { Column, GroupPanel, Grouping } from 'devextreme-react/data-grid';
+import DataGrid, { Column, GroupPanel, Grouping, Paging, Summary, GroupItem, SortByGroupSummaryInfo } from 'devextreme-react/data-grid';
 import service from './data.js';
 import GroupCell from './GroupCell.js';
 
 const customers = service.getCustomers();
 
 class App extends React.Component {
-  constructor(props) {
+  constructor(props){
     super(props);
     this.state = {
       sortOrder: 'asc'
     };
     this.onOptionChanged = this.onOptionChanged.bind(this);
-    this.calculateGroupValue = this.calculateGroupValue.bind(this);
-
+    this.calculateCellValue = this.calculateCellValue.bind(this);
   }
-
   render() {
     return (
+      <div>
+      <h2>The use of calculateGroupValue and groupCellTemplate</h2>
       <DataGrid
         dataSource={customers}
         keyExpr={'ID'}
         showBorders={true}
-        onOptionChanged={this.onOptionChanged}
       >
         <GroupPanel visible={true} />
         <Grouping autoExpandAll={true} />
@@ -32,11 +31,48 @@ class App extends React.Component {
         <Column
             dataField={'State'}
             defaultGroupIndex={0}
-            sortOrder={this.state.sortOrder}
             groupCellRender={GroupCell}
             calculateGroupValue={this.calculateGroupValue}/>
       </DataGrid>
+
+      <h2>The use of a calculated hidden column and Summary</h2>
+      <DataGrid
+          dataSource={customers}
+          keyExpr={'ID'}
+          showBorders={true}
+          onOptionChanged={this.onOptionChanged}
+      >
+        <GroupPanel visible={true} />
+        <Grouping autoExpandAll={true} />
+        <Paging pageSize={10} />
+        <Summary>
+          <GroupItem
+            column={'StateOrder'}
+            summaryType={'min'}
+            alignByColumn={true} />
+        </Summary>
+        <SortByGroupSummaryInfo summaryItem={'StateOrder'} />
+        <Column dataField={'ID'} />
+        <Column dataField={'CompanyName'} />
+        <Column dataField={'City'} />
+        <Column
+            dataField={'State'}
+            defaultGroupIndex={0}
+            sortOrder={this.state.sortOrder}/>
+        <Column
+            name={'StateOrder'}
+            showInColumnChooser={false}
+            visible={false}
+            calculateCellValue={this.calculateCellValue} />
+      </DataGrid>
+        </div>
     );
+  }
+
+  calculateGroupValue(rowData) {
+    let sortValue = rowData.State === "California" ? this.sortOrder !== "desc" ? "aaa" : "zzz" : rowData.State;
+    let displayValue = rowData.State;
+    return sortValue + ";" + displayValue;
   }
 
   onOptionChanged(e) {
@@ -47,11 +83,8 @@ class App extends React.Component {
     }
   }
 
-  calculateGroupValue(rowData) {
-    if (rowData.State === "California")
-      return this.state.sortOrder === "asc" ? "zzz" : "aaa";
-    else
-      return rowData.State;
+  calculateCellValue(rowData) {
+    return rowData.State === "California" ? this.state.sortOrder !== "desc" ? "aaa" : "zzz" : rowData.State;
   }
 }
 

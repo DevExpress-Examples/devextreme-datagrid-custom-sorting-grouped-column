@@ -10,7 +10,7 @@
 
     <script type="text/javascript">
         $(function () {
-            $("#gridContainer").dxDataGrid({
+            $("#gridContainer1").dxDataGrid({
                 dataSource: {
                     store: customers
                 },
@@ -26,30 +26,58 @@
                     {
                         dataField: "State",
                         groupIndex: 0,
-                        //it is necessary to set the sort order initially
-                        sortOrder: "asc",
-                        groupCellTemplate: function(element, data) {
-                            //is expanded
-                            if (data.data.items) {
-                                let originalText = "State: " + data.data.items[0].State;
-                                return element.text(originalText);
-                            }
-                            //is not expanded
-                            if (data.data.collapsedItems) {
-                                let originalText = "State: " + data.data.collapsedItems[0].State;
-                                return element.text(originalText);
-                            }
+                        groupCellTemplate: function(element, options) {
+                          let column = options.column;
+                          let displayValue = options.value.split(";")[1];
+                          element.text(column.caption + ": " + displayValue);
                         },
                         calculateGroupValue: function(rowData) {
-                            let dataGrid = $("#gridContainer").dxDataGrid("instance");
-                            if (rowData.State == "California")
-                                return dataGrid.columnOption("State", "sortOrder") == "asc" ? "zzz" : "aaa";
-                            else
-                                return rowData.State;
+                          let sortValue = rowData.State === "California" ? this.sortOrder !== "desc" ? "aaa" : "zzz" : rowData.State;
+                          let displayValue = rowData.State;
+                          return sortValue + ";" + displayValue;
                         }
                     }
                 ],
             });
+
+            var dataGrid = $("#gridContainer2").dxDataGrid({
+                dataSource: customers,
+                keyExpr: 'ID',
+                showBorders: true,
+                grouping: {
+                    autoExpandAll: true
+                },
+                groupPanel: {
+                    visible: true
+                },
+                paging: {
+                    pageSize: 10
+                },
+                columns: [ "ID", "CompanyName", "City",
+                    {
+                        dataField: "State",
+                        groupIndex: 0
+                    },
+                    {
+                      name: "StateOrder",
+                      calculateCellValue: function(rowData) {
+                        return rowData.State === "California" ? dataGrid.columnOption("State", "sortOrder") !== "desc" ? "aaa" : "zzz" : rowData.State;
+                      },
+                      visible: false,
+                      showInColumnChooser: false
+                    }
+                ],
+                summary: {
+                  groupItems: [{
+                    column: "StateOrder",
+                    summaryType: "min",
+                    alignByColumn: true
+                  }]
+                },
+                sortByGroupSummaryInfo: [{
+                  summaryItem: "StateOrder"
+                }],
+            }).dxDataGrid("instance");
         });
         let customers = [{
             ID: 1,
@@ -186,6 +214,9 @@
     </script>
 </head>
 <body>
-<div id="gridContainer"></div>
+<h2>The use of calculateGroupValue and groupCellTemplate</h2>
+<div id="gridContainer1"></div>
+<h2>The use of a calculated hidden column and Summary</h2>
+<div id="gridContainer2"></div>
 </body>
 </html>
