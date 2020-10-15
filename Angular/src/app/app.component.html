@@ -1,3 +1,5 @@
+<h2>The use of calculateGroupValue and groupCellTemplate</h2>
+
 <dx-data-grid
   [dataSource]="customers"
   keyExpr="ID"
@@ -10,16 +12,45 @@
   <dxi-column
     dataField="State"
     [groupIndex]="1"
-    [(sortOrder)]="stateSortOrder"
     [calculateGroupValue]="calculateGroupValue"
     groupCellTemplate="groupCellTemplate">
   </dxi-column>
   <div *dxTemplate="let data of 'groupCellTemplate'">
-    <div *ngIf="data.data.items">
-      {{data.data.items[0].State}}
-    </div>
-    <div *ngIf="data.data.collapsedItems">
-      {{data.data.collapsedItems[0].State}}
+    <div>
+      {{data.column.caption}}: {{data.value.split(";")[1]}}
     </div>
   </div>
+</dx-data-grid>
+
+<h2>The use of a calculated hidden column and Summary</h2>
+
+<dx-data-grid
+  [dataSource]="customers"
+  keyExpr="ID"
+  [showBorders]="true">
+  <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-summary>
+    <dxi-group-item
+      column="StateOrder"
+      summaryType="min"
+      [alignByColumn]="true">
+    </dxi-group-item>
+  </dxo-summary>
+  <dxi-sort-by-group-summary-info summaryItem="StateOrder"></dxi-sort-by-group-summary-info>
+  <dxi-column dataField="ID"></dxi-column>
+  <dxi-column dataField="CompanyName"></dxi-column>
+  <dxi-column dataField="City"></dxi-column>
+  <dxi-column
+    dataField="State"
+    [groupIndex]="0"
+    [(sortOrder)]="stateSortOrder">
+  </dxi-column>
+  <dxi-column
+    name="StateOrder"
+    [visible]="false"
+    [showInColumnChooser]="false"
+    [calculateCellValue]="calculateCellValue">
+  </dxi-column>
 </dx-data-grid>

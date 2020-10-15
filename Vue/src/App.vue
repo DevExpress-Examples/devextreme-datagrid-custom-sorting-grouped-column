@@ -1,40 +1,72 @@
 <template>
-  <dx-data-grid
+  <div>
+  <h2>The use of calculateGroupValue and groupCellTemplate</h2>
+  <DxDataGrid
     :show-borders="true"
     :data-source="dataSource"
     key-expr="ID"
   >
     <DxGroupPanel :visible="true"/>
     <DxGrouping :auto-expand-all="true"/>
-    <dx-column data-field="ID"/>
-    <dx-column data-field="CompanyName"/>
-    <dx-column data-field="City"/>
-    <dx-column
+    <DxColumn data-field="ID"/>
+    <DxColumn data-field="CompanyName"/>
+    <DxColumn data-field="City"/>
+    <DxColumn
       data-field="State"
-      :sort-order.sync="stateSortOrder"
       :group-index="0"
       :calculate-group-value="calculateGroupValue"
       group-cell-template="groupCellTemplate"
     />
     <template #groupCellTemplate="{ data }">
-      <div>
-      <div v-if="data.data.items">
-        {{data.data.items[0].State}}
-      </div>
-      <div v-if="data.data.collapsedItems">
-        {{data.data.collapsedItems[0].State}}
-      </div>
-      </div>
+      <div>{{data.column.caption + ": " + data.value.split(";")[1]}}</div>
     </template>
-  </dx-data-grid>
+  </DxDataGrid>
+
+  <h2>The use of a calculated hidden column and Summary</h2>
+  <DxDataGrid
+      :show-borders="true"
+      :data-source="dataSource"
+      key-expr="ID"
+  >
+    <DxGroupPanel :visible="true"/>
+    <DxGrouping :auto-expand-all="true"/>
+    <DxPaging :page-size="10" />
+    <DxSummary>
+      <DxGroupItem
+        column="StateOrder"
+        summaryType="min"
+        :alignByColumn="true"
+      />
+    </DxSummary>
+    <DxSortByGroupSummaryInfo summary-item="StateOrder"/>
+    <DxColumn data-field="ID"/>
+    <DxColumn data-field="CompanyName"/>
+    <DxColumn data-field="City"/>
+    <DxColumn
+      data-field="State"
+      :group-index="0"
+      :sort-order.sync="sortOrder"
+    />
+    <DxColumn
+      name="StateOrder"
+      :visible="false"
+      :show-in-column-chooser="false"
+      :calculateCellValue="calculateCellValue"
+    />
+  </DxDataGrid>
+  </div>
 </template>
 
 <script>
 import {
   DxDataGrid,
   DxColumn,
+  DxPaging,
   DxGrouping,
-  DxGroupPanel
+  DxGroupPanel,
+  DxSummary,
+  DxGroupItem,
+  DxSortByGroupSummaryInfo
 } from 'devextreme-vue/data-grid';
 
 import service from './data.js';
@@ -45,21 +77,27 @@ export default {
   components: {
     DxDataGrid,
     DxColumn,
+    DxPaging,
     DxGrouping,
-    DxGroupPanel
+    DxGroupPanel,
+    DxSummary,
+    DxGroupItem,
+    DxSortByGroupSummaryInfo
   },
   data() {
     return {
       dataSource: customers,
-      stateSortOrder: 'asc'
+      sortOrder: 'asc'
     };
   },
   methods: {
     calculateGroupValue(rowData) {
-      if (rowData.State === "California")
-        return this.stateSortOrder === "asc" ? "zzz" : "aaa";
-      else
-        return rowData.State;
+      let sortValue = rowData.State === "California" ? this.sortOrder !== "desc" ? "aaa" : "zzz" : rowData.State;
+      let displayValue = rowData.State;
+      return sortValue + ";" + displayValue;
+    },
+    calculateCellValue(rowData) {
+      return rowData.State === "California" ? this.sortOrder !== "desc" ? "aaa" : "zzz" : rowData.State;
     }
   }
 };

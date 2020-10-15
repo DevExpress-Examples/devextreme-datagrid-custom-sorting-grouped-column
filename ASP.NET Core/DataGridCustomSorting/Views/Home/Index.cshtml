@@ -1,30 +1,22 @@
-<h2>DataGrid - How to apply custom sorting to a grouped column</h2>
+<h1>DataGrid - How to apply custom sorting to a grouped column</h1>
+
+<h2>The use of calculateGroupValue and groupCellTemplate</h2>
 
 <script>
     function calculateGroupValue(rowData) {
-        let dataGrid = $("#gridContainer").dxDataGrid("instance");
-        if (rowData.State == "California")
-            return dataGrid.columnOption("State", "sortOrder") == "asc" ? "zzz" : "aaa";
-        else
-            return rowData.State;
+        let sortValue = rowData.State === "California" ? this.sortOrder !== "desc" ? "aaa" : "zzz" : rowData.State;
+        let displayValue = rowData.State;
+        return sortValue + ";" + displayValue;
     }
 
-    function groupCellTemplate(element, data) {
-        //is expanded
-        if (data.data.items) {
-            let originalText = "State: " + data.data.items[0].State;
-            return element.text(originalText);
-        }
-        //is not expanded
-        if (data.data.collapsedItems) {
-            let originalText = "State: " + data.data.collapsedItems[0].State;
-            return element.text(originalText);
-        }
+    function groupCellTemplate(element, options) {
+        let column = options.column;
+        let displayValue = options.value.split(";")[1];
+        element.text(column.caption + ": " + displayValue);
     }
 </script>
 
 @(Html.DevExtreme().DataGrid()
-    .ID("gridContainer")
     .ShowBorders(true)
     .DataSource(new JS("customers"))
     .KeyExpr("ID")
@@ -35,12 +27,53 @@
         columns.Add()
             .DataField("State")
             .GroupIndex(0)
-            .SortOrder(SortOrder.Asc)
             .CalculateGroupValue(new JS("calculateGroupValue"))
             .GroupCellTemplate(new JS("groupCellTemplate"));
     })
     .GroupPanel(p => p.Visible(true))
     .Grouping(g => g.AutoExpandAll(true))
+)
+
+<h2>The use of a calculated hidden column and Summary</h2>
+
+<script>
+    function calculateCellValue(rowData) {
+        let dataGrid = $("#gridContainer2").dxDataGrid("instance");
+        return rowData.State === "California" ? dataGrid.columnOption("State", "sortOrder") !== "desc" ? "aaa" : "zzz" : rowData.State;
+    }
+</script>
+
+@(Html.DevExtreme().DataGrid()
+    .ID("gridContainer2")
+    .ShowBorders(true)
+    .DataSource(new JS("customers"))
+    .KeyExpr("ID")
+    .Columns(columns =>
+    {
+        columns.Add().DataField("ID");
+        columns.Add().DataField("CompanyName");
+        columns.Add().DataField("City");
+        columns.Add()
+            .DataField("State")
+            .GroupIndex(0);
+        columns.Add()
+            .Name("StateOrder")
+            .Visible(false)
+            .ShowInColumnChooser(false)
+            .CalculateCellValue("calculateCellValue");
+    })
+    .GroupPanel(p => p.Visible(true))
+    .Grouping(g => g.AutoExpandAll(true))
+    .Paging(paging => paging.PageSize(10))
+    .Summary(s => s.GroupItems(items =>
+        items.Add()
+            .Column("StateOrder")
+            .SummaryType(SummaryType.Min)
+            .AlignByColumn(true))
+    )
+    .SortByGroupSummaryInfo(sort =>
+        sort.Add()
+        .SummaryItem("StateOrder"))
 )
 
 <script>

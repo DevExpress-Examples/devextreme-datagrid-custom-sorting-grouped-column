@@ -1,13 +1,9 @@
 import React from 'react';
 
-export default function GroupCell(data) {
-    let cell;
-    if(data.data.items) {
-        cell = <div>State: {data.data.items[0].State}</div>
-    } else {
-        cell = <div>State: {data.data.collapsedItems[0].State}</div>
-    }
+export default function GroupCell(options) {
+    let column = options.column;
+    let displayValue = options.value.split(";")[1];
     return (
-        <div>{cell}</div>
+        <div>{column.caption + ": " + displayValue}</div>
     );
 }
