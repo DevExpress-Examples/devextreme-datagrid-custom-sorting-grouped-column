@@ -4,7 +4,7 @@
     </PropertyGroup>
     <ItemGroup>
     <PackageReference Include="DevExtreme.AspNet.Data" Version="2.6.1" />
-    <PackageReference Include="DevExtreme.AspNet.Core" Version="20.1.7" />
+    <PackageReference Include="DevExtreme.AspNet.Core" Version="20.*" />
     <PackageReference Include="BuildBundlerMinifier" Version="2.9.406" />
     </ItemGroup>
     <ItemGroup>
