@@ -8,6 +8,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "browserslist": "^4.20.2",
+    "caniuse-lite": "^1.0.30001322",
     "core-js": "^2.6.11",
     "devextreme": "^20.1.7",
     "devextreme-vue": "^20.1.7",
