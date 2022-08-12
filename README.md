@@ -9,7 +9,7 @@ This example demonstrates how to sort a grouped column. In this example, the Cal
 
 You can implement the sorting technique in two following ways:
 
-1. This solution is suitable for very simple cases when paging and group summary are not used. Use the [calculateGroupValue](https://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/columns/#calculateGroupValue) function to sort groups. This function returns values that are used for sorting and displays them in group headers. Use the [groupCellTemplate](https://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/columns/#groupCellTemplate) property to revert the group header text to its initial value. Note that the [remoteOperations](https://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/remoteOperations/) property should be set to **false**.
+1. This solution is suitable for cases when paging and group summary are not used. Use the [calculateGroupValue](https://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/columns/#calculateGroupValue) function to sort groups. This function returns values that are used for sorting and displays them in group headers. Use the [groupCellTemplate](https://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/columns/#groupCellTemplate) property to revert the group header text to its initial value. Note that the [remoteOperations](https://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/remoteOperations/) property should be set to **false**.
     ![A sorted DataGrid, first solution](devextreme-datagrid-custom-sorting-grouped-column-solution-1.png)
     
 
