@@ -9,13 +9,13 @@ This example demonstrates how to sort a grouped column. In this example, the Cal
 
 You can implement the sorting technique in two following ways:
 
-1. 
-![A custom editing form](devextreme-datagrid-custom-sorting-grouped-column-solution-1.png)
-This solution is suitable for very simple cases when paging and group summary are not used. Use the [calculateGroupValue](https://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/columns/#calculateGroupValue) function to sort groups. This function returns values that are used for sorting and displays them in group headers. Use the [groupCellTemplate](https://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/columns/#groupCellTemplate) property to revert the group header text to its initial value. Note that the [remoteOperations](https://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/remoteOperations/) property should be set to **false**.
+1. This solution is suitable for very simple cases when paging and group summary are not used. Use the [calculateGroupValue](https://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/columns/#calculateGroupValue) function to sort groups. This function returns values that are used for sorting and displays them in group headers. Use the [groupCellTemplate](https://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/columns/#groupCellTemplate) property to revert the group header text to its initial value. Note that the [remoteOperations](https://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/remoteOperations/) property should be set to **false**.
+    ![A sorted DataGrid, first solution](devextreme-datagrid-custom-sorting-grouped-column-solution-1.png)
+    
 
-2. 
-![A custom editing form](devextreme-datagrid-custom-sorting-grouped-column-solution-2.png)
-The second solution is more universal. It correctly displays summaries and group row texts. It is possible to use remote operations (except the group paging) if a dedicated field is used on the server to sort groups. Use a calculated hidden column to create required cell values to sort them by Summary Group Info.
+2. The second solution is more universal. It correctly displays summaries and group row texts. It is possible to use remote operations (except the group paging) if a dedicated field is used on the server to sort groups. Use a calculated hidden column to create required cell values to sort them by Summary Group Info.
+    ![A sorted DataGrid, second solution](devextreme-datagrid-custom-sorting-grouped-column-solution-2.png)
+
 
 ## Files to Look At
 
