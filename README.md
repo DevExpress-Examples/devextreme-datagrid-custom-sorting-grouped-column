@@ -17,7 +17,7 @@ You can implement the sorting technique in two following ways:
     ![A sorted DataGrid, second solution](devextreme-datagrid-custom-sorting-grouped-column-solution-2.png)
 
 
-## Files to Look At
+## Files to Review
 
 - **jQuery**
     - [index.html](jQuery/index.html)
@@ -29,7 +29,7 @@ You can implement the sorting technique in two following ways:
 - **React**
     - [App.js](React/src/App.js)
 - **NetCore**    
-    - [Index.cshtml](ASP.NET Core/DataGridCustomSorting/Views/Home/Index.cshtml)
+    - [Index.cshtml](ASP.NET&#32;Core/DataGridCustomSorting/Views/Home/Index.cshtml)
 
 ## Documentation
 
