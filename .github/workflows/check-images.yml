@@ -22,48 +22,51 @@ jobs:
         run: |
           unused=()
 
-          # Find all images in the root and `images/` directory (if it exists)
-          images=$(find . -maxdepth 1 -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.svg" -o -iname "*.gif" \) -printf "%P\n")
+          # Find all images in the root directory
+          for img in *.png *.jpg *.jpeg *.svg *.gif; do
+            [ -f "$img" ] && images="$images $img"
+          done
+
+          # Find all images in the images/ directory (if it exists)
           if [ -d "./images" ]; then
-            images+=" $(find ./images -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.svg" -o -iname "*.gif" \) -printf "%P\n")"
+            for img in ./images/*.png ./images/*.jpg ./images/*.jpeg ./images/*.svg ./images/*.gif; do
+              [ -f "$img" ] && images="$images $img"
+            done
           fi
 
-          # Loop through each image to check if it's referenced in any README files
+          # Check if root README.md exists
+          if [ ! -f "./README.md" ]; then
+            echo "README.md not found in root directory - skipping image check"
+            exit 0
+          fi
+
+          # Loop through each image to check if it's referenced in the root README.md
           for img in $images; do
-            found=false
-            while IFS= read -r -d '' readme_file; do
-              if grep -q "!\[.*\](.*$img.*)" "$readme_file"; then
-                found=true
-                break
-              fi
-            done < <(find . -iname "readme.md" -print0)
+            # Normalize path: remove leading ./
+            normalized_img="${img#./}"
             
-            if [ "$found" = false ]; then
-              unused+=("$img")
+            # Check if the image is referenced in README.md
+            if ! grep -q "$normalized_img" "./README.md"; then
+              unused+=("$normalized_img")
             fi
           done
 
           # Check if there are any unused images
           if [ ${#unused[@]} -gt 0 ]; then
-            echo "❌ Unused images found that are not referenced in any README files:"
+            echo "Unused images found that are not referenced in the root README.md:"
             echo "## Unused Images" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "| Image Name | Path |" >> $GITHUB_STEP_SUMMARY
             echo "|------------|------|" >> $GITHUB_STEP_SUMMARY
             
             for img in "${unused[@]}"; do
-              if [[ -f "./$img" ]]; then
-                path="./$img"
-              else
-                path="./images/$img"
-              fi
               name=$(basename "$img")
-              echo "$name -> $path"
+              echo "$name -> $img"
               
-              echo "| $name | $path |" >> $GITHUB_STEP_SUMMARY
+              echo "| $name | $img |" >> $GITHUB_STEP_SUMMARY
             done
 
             exit 1
           else
-            echo "✅ No unused images found that are not referenced in README files!"
+            echo "No unused images found that are not referenced in the root README.md!"
           fi
