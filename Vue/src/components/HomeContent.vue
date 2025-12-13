@@ -11,7 +11,7 @@ const props = defineProps({
   },
 });
 const count = ref(0);
-const buttonText = computed<string>(
+const buttonText = computed < string > (
   () => `Click ${props.text}: ${count.value}`
 );
 function clickHandler() {

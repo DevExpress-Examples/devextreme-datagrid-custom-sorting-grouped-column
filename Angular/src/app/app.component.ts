@@ -13,7 +13,7 @@ export class AppComponent {
 
   buttonText = 'Click count: 0';
 
-  onClick(e: ClickEvent): void {
+  onClick(_e: ClickEvent): void {
     this.counter++;
     this.buttonText = `Click count: ${this.counter}`;
   }
