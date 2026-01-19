@@ -22,7 +22,7 @@ npm run lint
 
 ## Further help
 
-jQuery docs: https://api.jquery.com/
+jQuery docs: [https://api.jquery.com/](https://api.jquery.com/)
 DevExtreme docs: https://js.devexpress.com/jQuery/Documentation
 
 To get more help with DevExtreme, submit a ticket through the [Support Center](https://supportcenter.devexpress.com/ticket/create).
