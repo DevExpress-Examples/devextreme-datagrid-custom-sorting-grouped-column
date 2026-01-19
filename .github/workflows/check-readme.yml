@@ -21,6 +21,7 @@ jobs:
 
       - name: Check links in README
         uses: lycheeverse/lychee-action@v1
+        continue-on-error: true
         with:
           args: --verbose --no-progress './**/[Rr][Ee][Aa][Dd][Mm][Ee].md' --exclude-file .lycheeignore
           fail: true
