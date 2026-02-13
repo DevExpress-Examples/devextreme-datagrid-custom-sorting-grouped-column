@@ -44,7 +44,7 @@ You can implement the sorting technique in two following ways:
 
 - [TreeList/DataGrid - How to implement a custom column chooser using a Popup with List](https://github.com/DevExpress-Examples/TreeList-DataGrid---Custom-column-chooser)
 <!-- feedback -->
-## Does this example address your development requirements/objectives?
+## Does This Example Address Your Development Requirements/Objectives?
 
 [<img src="https://www.devexpress.com/support/examples/i/yes-button.svg"/>](https://www.devexpress.com/support/examples/survey.xml?utm_source=github&utm_campaign=devextreme-datagrid-custom-sorting-grouped-column&~~~was_helpful=yes) [<img src="https://www.devexpress.com/support/examples/i/no-button.svg"/>](https://www.devexpress.com/support/examples/survey.xml?utm_source=github&utm_campaign=devextreme-datagrid-custom-sorting-grouped-column&~~~was_helpful=no)
 
