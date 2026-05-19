@@ -16,7 +16,7 @@ jobs:
   check-unused-images:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Check for unused images
         continue-on-error: true
