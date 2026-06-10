@@ -1,8 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import App from './App.tsx';
 
-test('renders learn react link', () => {
+test('renders both custom sorting solutions', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const firstSolutionHeader = screen.getByText(/The use of calculateGroupValue and groupCellTemplate/i);
+  const secondSolutionHeader = screen.getByText(/The use of a calculated hidden column and Summary/i);
+  expect(firstSolutionHeader).toBeInTheDocument();
+  expect(secondSolutionHeader).toBeInTheDocument();
 });
