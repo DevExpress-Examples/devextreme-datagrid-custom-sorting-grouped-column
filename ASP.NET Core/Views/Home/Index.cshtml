@@ -1,29 +1,86 @@
 @using ASP_NET_Core.Models
+@model IEnumerable<Customer>
 
-<h2>Home</h2>
+<h2>The use of calculateGroupValue and groupCellTemplate</h2>
 
-@(Html.DevExtreme().DataGrid<SampleOrder>()
+<script>
+    function calculateGroupValue(rowData) {
+        let sortValue = rowData.State;
+        if (rowData.State === "California") {
+            sortValue = this.sortOrder !== "desc" ? "aaa" : "zzz";
+        }
+        let displayValue = rowData.State;
+        return sortValue + ";" + displayValue;
+    }
+
+    function groupCellTemplate(element, options) {
+        let column = options.column;
+        let displayValue = options.value.split(";")[1];
+        element.text(column.caption + ": " + displayValue);
+    }
+</script>
+
+@(Html.DevExtreme().DataGrid<Customer>()
+    .ID("gridContainer1")
     .ShowBorders(true)
-    .DataSource(d => d.Mvc().Controller("SampleData").LoadAction("Get").Key("OrderID"))
+    .DataSource(Model)
+    .KeyExpr("ID")
     .Columns(columns => {
-        columns.AddFor(m => m.OrderID);
-        columns.AddFor(m => m.OrderDate);
-        columns.AddFor(m => m.CustomerName);
-        columns.AddFor(m => m.ShipCountry);
-        columns.AddFor(m => m.ShipCity);
+        columns.Add().DataField("ID");
+        columns.Add().DataField("CompanyName");
+        columns.Add().DataField("City");
+        columns.Add()
+            .DataField("State")
+            .GroupIndex(0)
+            .CalculateGroupValue(new JS("calculateGroupValue"))
+            .GroupCellTemplate(new JS("groupCellTemplate"));
     })
-    .Paging(p => p.PageSize(10))
-    .FilterRow(f => f.Visible(true))
-    .HeaderFilter(f => f.Visible(true))
     .GroupPanel(p => p.Visible(true))
-    .Grouping(g => g.AutoExpandAll(false))
-    .RemoteOperations(true)
-    .Summary(s => s
-        .TotalItems(totalItems => {
-            totalItems.AddFor(m => m.ShipCity).SummaryType(SummaryType.Count);
-        })
-        .GroupItems(groupItems => {
-            groupItems.Add().SummaryType(SummaryType.Count);
-        })
+    .Grouping(g => g.AutoExpandAll(true))
+)
+
+<h2>The use of a calculated hidden column and Summary</h2>
+
+<script>
+    function calculateCellValue(rowData) {
+        let dataGrid = $("#gridContainer2").dxDataGrid("instance");
+        let sortOrder = dataGrid ? dataGrid.columnOption("State", "sortOrder") : "asc";
+        let sortValue = rowData.State;
+        if (rowData.State === "California") {
+            sortValue = sortOrder !== "desc" ? "aaa" : "zzz";
+        }
+        return sortValue;
+    }
+</script>
+
+@(Html.DevExtreme().DataGrid<Customer>()
+    .ID("gridContainer2")
+    .ShowBorders(true)
+    .DataSource(Model)
+    .KeyExpr("ID")
+    .Columns(columns => {
+        columns.Add().DataField("ID");
+        columns.Add().DataField("CompanyName");
+        columns.Add().DataField("City");
+        columns.Add()
+            .DataField("State")
+            .GroupIndex(0);
+        columns.Add()
+            .Name("StateOrder")
+            .Visible(false)
+            .ShowInColumnChooser(false)
+            .CalculateCellValue("calculateCellValue");
+    })
+    .GroupPanel(p => p.Visible(true))
+    .Grouping(g => g.AutoExpandAll(true))
+    .Paging(paging => paging.PageSize(10))
+    .Summary(s => s.GroupItems(items =>
+        items.Add()
+            .Column("StateOrder")
+            .SummaryType(SummaryType.Min)
+            .AlignByColumn(true))
     )
+    .SortByGroupSummaryInfo(sort =>
+        sort.Add()
+        .SummaryItem("StateOrder"))
 )
