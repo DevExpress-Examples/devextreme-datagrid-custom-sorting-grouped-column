@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# DevExtreme generated files
+src/devextreme-license.ts

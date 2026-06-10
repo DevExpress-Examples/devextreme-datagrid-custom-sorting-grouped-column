@@ -1,0 +1,4 @@
+node_modules
+
+# DevExtreme generated files
+src/devextreme-license.js
