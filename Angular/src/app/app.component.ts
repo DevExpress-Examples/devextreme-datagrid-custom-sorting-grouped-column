@@ -1,21 +1,40 @@
 import { Component } from '@angular/core';
-import { DxButtonModule, DxButtonTypes } from 'devextreme-angular/ui/button';
+import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
+import { Customer, Service } from './app.service';
 
 @Component({
     selector: 'app-root',
-    imports: [DxButtonModule],
+    imports: [DxDataGridModule],
+    providers: [Service],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'Angular';
+  customers: Customer[];
 
-  counter = 0;
+  stateSortOrder = 'asc';
 
-  buttonText = 'Click count: 0';
+  constructor(service: Service) {
+    this.customers = service.getCustomers();
+    this.calculateCellValue = this.calculateCellValue.bind(this);
+  }
 
-  onClick(_e: DxButtonTypes.ClickEvent): void {
-    this.counter++;
-    this.buttonText = `Click count: ${this.counter}`;
+  calculateGroupValue(this: { sortOrder?: string }, rowData: Customer): string {
+    const isReversed = this.sortOrder === 'desc';
+    let sortValue = rowData.State;
+    if (rowData.State === 'California') {
+      sortValue = isReversed ? 'zzz' : 'aaa';
+    }
+    const displayValue = rowData.State;
+    return `${sortValue};${displayValue}`;
+  }
+
+  calculateCellValue(rowData: Customer): string {
+    const isReversed = this.stateSortOrder === 'desc';
+    let sortValue = rowData.State;
+    if (rowData.State === 'California') {
+      sortValue = isReversed ? 'zzz' : 'aaa';
+    }
+    return sortValue;
   }
 }
