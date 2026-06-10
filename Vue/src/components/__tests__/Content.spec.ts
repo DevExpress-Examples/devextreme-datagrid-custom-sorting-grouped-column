@@ -5,7 +5,8 @@ import Content from '../HomeContent.vue';
 
 describe('Content', () => {
   it('renders properly', () => {
-    const wrapper = mount(Content, { props: { text: 'count' } });
-    expect(wrapper.text()).toContain('count');
+    const wrapper = mount(Content);
+    expect(wrapper.text()).toContain('The use of calculateGroupValue and groupCellTemplate');
+    expect(wrapper.text()).toContain('The use of a calculated hidden column and Summary');
   });
 });
