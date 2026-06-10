@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { DxButtonModule } from 'devextreme-angular/ui/button';
-import { ClickEvent } from 'devextreme/ui/button';
+import { DxButtonModule, DxButtonTypes } from 'devextreme-angular/ui/button';
 
 @Component({
     selector: 'app-root',
@@ -15,7 +14,7 @@ export class AppComponent {
 
   buttonText = 'Click count: 0';
 
-  onClick(_e: ClickEvent): void {
+  onClick(_e: DxButtonTypes.ClickEvent): void {
     this.counter++;
     this.buttonText = `Click count: ${this.counter}`;
   }
