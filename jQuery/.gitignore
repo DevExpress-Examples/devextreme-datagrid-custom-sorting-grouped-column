@@ -2,3 +2,4 @@ node_modules
 
 # DevExtreme generated files
 src/devextreme-license.js
+src/devextreme-license.ts
